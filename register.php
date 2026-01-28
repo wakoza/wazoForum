@@ -2,23 +2,39 @@
 include("db_connection.php"); 
 session_start();
 
+$redmassage = "";
+$greenmassage = "";
+
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    echo $password;
 
-    //confirm your password
+    //check if a user aleady exist
+    $checkuser = "SELECT * FROM users WHERE email = '$email'";
+    $checkresults = mysqli_query($conn, $checkuser);
+    if(mysqli_num_rows($checkresults) > 0){
+        $redmassage = "Account already exist!!";
+    }else{
+
+         //confirm your password
     if($confirm_password == $password){
-        $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
+          //hash a passwoord
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+
+        $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$hashed_password')";
         $results = mysqli_query($conn, $sql);
         if($results){
-            echo "registered successful";
+            $greenmassage = "registered successful!!";
         }else{
-            echo "error registering";
+            $redmassage = "error registering";
         }
 }
-}
+    }
+}   
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -252,12 +268,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <h1>Create Account</h1>
             <p class="subtitle">Join our community forum</p>
             
-            <?php if ($error): ?>
-                <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+            <?php if ($redmassage): ?>
+                <div class="alert alert-error"><?php echo htmlspecialchars($redmassage); ?></div>
             <?php endif; ?>
             
-            <?php if ($success): ?>
-                <div class="alert alert-success"><?php echo $success; ?></div>
+            <?php if ($greenmassage): ?>
+                <div class="alert alert-success"><?php echo $greenmassage; ?></div>
             <?php endif; ?>
             
             <form method="POST" action="">
