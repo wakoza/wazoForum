@@ -1,7 +1,7 @@
 <?php
 
 // Create connection
-$conn = new mysqli("localhost", "root", "", "e_forum");
+$conn = new mysqli("localhost", "root", "","wazoforum");
 
 // Check connection
 if(!$conn){
