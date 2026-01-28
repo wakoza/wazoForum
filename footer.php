@@ -1,7 +1,7 @@
 <html>
     <head>
         <style>
-                /* ===== FOOTER ===== */
+                
         footer {
             background: #222;
             color: #fff;
@@ -13,9 +13,9 @@
     </head>
     <body>
         
-            <!-- FOOTER -->
+            
     <footer>
-        <p>&copy; 2026 E-Forum | All Rights Reserved | Building Communities Together</p>
+        <p>&copy; 2026 wazoForum | All Rights Reserved | Building Communities Together</p>
     </footer>
 
     </body>
