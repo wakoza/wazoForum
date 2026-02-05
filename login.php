@@ -1,5 +1,6 @@
 <?php
 include("db_connection.php"); 
+include("function.php");
 session_start();
 
 $redmassage = "";
@@ -9,6 +10,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
+    //validate input
+    if(empty($email) || empty($password)){
+        $redmassage = "email or password is required";
+    }
+
     //fetch informatiom from the database
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $results = mysqli_query($conn, $sql);
@@ -16,13 +22,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     //change info into an array 
     if(mysqli_num_rows($results) == 1){
         $row = mysqli_fetch_assoc($results);
+        
     //verifying the password
         if($password == $row['password']){
-            $_SESSION['id'] = $row['id'];
+            $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['username'] = $row['username'];
 
             //redirecting to welcome page
-            header("location: welcome.php");
+            header("location: index.php");
             exit();
         }else{
             $redmassage = "Incorrect password" .mysqli_connect_error();

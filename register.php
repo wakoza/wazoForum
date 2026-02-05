@@ -1,5 +1,6 @@
 <?php
 include("db_connection.php"); 
+include("function.php");
 session_start();
 
 $redmassage = "";
@@ -10,17 +11,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
-    echo $password;
 
+    //validation
+    if(strlen($username) < 4){
+       $redmassage = "username must have atleast 4 characters";
+    }elseif(strlen($username) > 20){
+        $redmassage = "username must have atmost 20 characters";
+    }elseif(filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $redmassage = "invalid email";
+    }elseif($confirm_password == $password){
+       $redmassage = "password does not match";
+    }elseif(strlen($password) < 6 && strlen($password) < 9){
+        $redmassage = "password must be > 6 and < 9";
+    }else{
     //check if a user aleady exist
     $checkuser = "SELECT * FROM users WHERE email = '$email'";
     $checkresults = mysqli_query($conn, $checkuser);
     if(mysqli_num_rows($checkresults) > 0){
         $redmassage = "Account already exist!!";
     }else{
-
-         //confirm your password
-    if($confirm_password == $password){
           //hash a passwoord
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -36,7 +45,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
 }   
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html>`
 <html lang="en">
 <head>
     <meta charset="UTF-8">

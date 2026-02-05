@@ -1,3 +1,9 @@
+
+<?php
+session_start();
+include("db_connection.php");
+include("function.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,12 +203,20 @@
 <?php include("header.php"); ?>
     <!-- HERO SECTION -->
     <section class="hero">
+        <?php if(isLogedIn()):?>
+        <h1>Welcome to our <br> Community Forums</h1>
+        <p>Connect, discuss, and share knowledge with our community</p>
+        <?php else: ?>
         <h1>Responsive Design<br>for Community Forums</h1>
         <p>Connect, discuss, and share knowledge with our community</p>
         <div class="search-box">
             <button>Join Discussion</button>
         </div>
+        <?php endif; ?>
+
     </section>
+    
+    
 
     <!-- FEATURES SECTION -->
     <section class="features">
@@ -240,7 +254,7 @@
                 <h2>We've been building <span>community</span><br>for <span>many years.</span></h2>
                 <p>Our platform has been trusted by thousands of users to find answers, share expertise, and build meaningful connections. We're committed to providing a safe, welcoming space for everyone.</p>
                 <p>Join our growing community and discover why millions of people choose to engage with us every day. Your voice matters and your contributions help others.</p>
-                <a href="register.php" class="company-btn">Join our community</a>
+                <a href="#" class="company-btn">Create a post</a>
             </div>
             <div class="company-images">
                 <img src="pictures/background.jpeg" alt="Community Discussion">
