@@ -1,0 +1,54 @@
+/* ===== POST FEED STYLES ===== */
+body {
+    font-family: Arial, sans-serif;
+    background: #fafafa;
+}
+
+.feed {
+    max-width: 800px;   /* increase from 600px to 800px */
+    margin: 30px auto;
+}
+
+.post {
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 15px;   /* slightly rounder corners */
+    margin-bottom: 25px;   /* more spacing between posts */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* slightly stronger shadow */
+    padding: 20px;         /* add padding inside the post */
+}
+
+.post-header {
+    padding-bottom: 10px; /* extra space below header */
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 16px;       /* slightly bigger font */
+}
+
+.category {
+    font-size: 16px;       /* slightly bigger category text */
+    color: #0095f6;
+}
+
+.post-body {
+    padding-top: 10px;
+    font-size: 18px;       /* increase content font size */
+    line-height: 1.6;      /* better readability */
+}
+
+.post-footer {
+    padding-top: 12px;
+    border-top: 1px solid #efefef;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+}
+
+.reply-btn {
+    color: #0095f6;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+}

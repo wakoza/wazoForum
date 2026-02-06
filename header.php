@@ -1,7 +1,7 @@
 <?php
 
 include("db_connection.php");
-include("function.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -122,23 +122,17 @@ include("function.php");
             <ul class="nav-menu">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="categories.php">Categories</a></li>
-                <li><a href="post.php">Posts</a></li>
+                <li><a href="posts.php">Posts</a></li>
             </ul>
-             <?php if (isLogedIn()): 
-                $current_user = getCurrentUser();
-                ?>
 
             <span style="color:white;">
                 <i class="fas fa-user-circle"></i>
-                 <?php echo $_SESSION['username']; ?>
             </span>
             <a href="logout.php">Logout</a>
-             <?php else: ?>
 
             <div class="auth-buttons">
                 <a href="login.php" class="btn-login">Login</a>
                 <a href="register.php" class="btn-register">Register</a>
             </div>
-            <?php endif; ?>
         </div>
     </header>

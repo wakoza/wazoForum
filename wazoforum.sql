@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2026 at 10:00 PM
+-- Generation Time: Feb 06, 2026 at 03:30 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -34,19 +34,13 @@ CREATE TABLE `categories` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `comments`
+-- Dumping data for table `categories`
 --
 
-CREATE TABLE `comments` (
-  `comment_id` int(11) NOT NULL,
-  `reply_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `content` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `categories` (`category_id`, `category_name`, `description`, `created_at`) VALUES
+(101, 'KILIMO', 'Majadiliano yote yanayo husu kilimo', '2026-02-01 11:27:13'),
+(102, 'BIASHARA', 'Majadiliano yote yanayo husu biashara', '2026-02-01 11:27:13');
 
 -- --------------------------------------------------------
 
@@ -71,21 +65,9 @@ CREATE TABLE `posts` (
   `post_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
-  `title` varchar(200) NOT NULL,
   `content` text NOT NULL,
   `status` enum('open','closed') DEFAULT 'open',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `post_tags`
---
-
-CREATE TABLE `post_tags` (
-  `post_id` int(11) NOT NULL,
-  `tag_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -100,17 +82,6 @@ CREATE TABLE `replies` (
   `user_id` int(11) NOT NULL,
   `content` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tags`
---
-
-CREATE TABLE `tags` (
-  `tag_id` int(11) NOT NULL,
-  `tag_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -152,14 +123,6 @@ ALTER TABLE `categories`
   ADD UNIQUE KEY `category_name` (`category_name`);
 
 --
--- Indexes for table `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`comment_id`),
-  ADD KEY `fk_comments_reply` (`reply_id`),
-  ADD KEY `fk_comments_user` (`user_id`);
-
---
 -- Indexes for table `likes`
 --
 ALTER TABLE `likes`
@@ -176,26 +139,12 @@ ALTER TABLE `posts`
   ADD KEY `fk_posts_category` (`category_id`);
 
 --
--- Indexes for table `post_tags`
---
-ALTER TABLE `post_tags`
-  ADD PRIMARY KEY (`post_id`,`tag_id`),
-  ADD KEY `fk_posttags_tag` (`tag_id`);
-
---
 -- Indexes for table `replies`
 --
 ALTER TABLE `replies`
   ADD PRIMARY KEY (`reply_id`),
   ADD KEY `fk_replies_post` (`post_id`),
   ADD KEY `fk_replies_user` (`user_id`);
-
---
--- Indexes for table `tags`
---
-ALTER TABLE `tags`
-  ADD PRIMARY KEY (`tag_id`),
-  ADD UNIQUE KEY `tag_name` (`tag_name`);
 
 --
 -- Indexes for table `users`
@@ -213,13 +162,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `comments`
---
-ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT for table `likes`
@@ -240,12 +183,6 @@ ALTER TABLE `replies`
   MODIFY `reply_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tags`
---
-ALTER TABLE `tags`
-  MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -254,13 +191,6 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `comments`
---
-ALTER TABLE `comments`
-  ADD CONSTRAINT `fk_comments_reply` FOREIGN KEY (`reply_id`) REFERENCES `replies` (`reply_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_comments_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `likes`
@@ -275,13 +205,6 @@ ALTER TABLE `likes`
 ALTER TABLE `posts`
   ADD CONSTRAINT `fk_posts_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_posts_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `post_tags`
---
-ALTER TABLE `post_tags`
-  ADD CONSTRAINT `fk_posttags_post` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_posttags_tag` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `replies`

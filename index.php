@@ -2,7 +2,7 @@
 <?php
 session_start();
 include("db_connection.php");
-include("function.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
