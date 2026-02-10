@@ -8,13 +8,13 @@ if(!function_exists('isLogedIn')){
 }
 
 //function to get current user
-if(function_exists('getCurrentUser')){
+if(!function_exists('getCurrentUser')){
     function getCurrentUser(){
         if(isLogedIn()){
             return [
-                'user_id' => $_SESSION['user_id'],
-                'username' => $_SESSION['username'],
-                'email' => $_SESSION['email'],
+                'user_id' => $_SESSION['user_id'] ?? null,
+                'username' => $_SESSION['username'] ?? null,
+                'email' => $_SESSION['email'] ?? null,
                 'role' => $_SESSION['role'] ?? 'member'
             ];
         }

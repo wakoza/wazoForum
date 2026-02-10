@@ -1,6 +1,7 @@
 <?php
+session_start();
 include("db_connection.php");
-include("function.php"); // contains isLogedIn() and getCurrentUser()
+include("function.php");
 ?>
 
 <!DOCTYPE html>
@@ -8,161 +9,211 @@ include("function.php"); // contains isLogedIn() and getCurrentUser()
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="post.css">
-    <title>wazoForum - Posts</title>
+    <title>All Posts - wazoForum</title>
     <style>
-        /* ===== HEADER STYLES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        header {
-            background: #667eea;
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
-
-        .nav-menu a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-login, .btn-register {
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border: 2px solid white;
-        }
-
-        .btn-login {
-            background: transparent;
-            color: white;
-        }
-
-        .btn-login:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        .btn-register {
-            background: white;
-            color: #667eea;
-        }
-
-        .btn-register:hover {
-            background: #f0f0f0;
-            transform: scale(1.05);
-        }
-
-        /* ===== POST FEED STYLES ===== */
         body {
-            font-family: Arial, sans-serif;
-            background: #fafafa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
         }
 
-        .feed {
-            max-width: 600px;
+        .container {
+            max-width: 900px;
             margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            margin-bottom: 30px;
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        /* ===== POSTS - JAMII FORUM STYLE ===== */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border-top: 2px solid #ddd;
         }
 
         .post {
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: white;
+            border-bottom: 2px solid #ddd;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            transition: background 0.3s ease;
+            min-height: 200px;
+        }
+
+        .post:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .post:hover {
+            background: #f5f5f5;
+        }
+
+        .post-sidebar {
+            background: #f0f2f5;
+            padding: 20px 15px;
+            border-right: 2px solid #ddd;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .post-author {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 15px;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .post-avatar {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .post-category {
+            font-size: 12px;
+            background: #667eea;
+            color: white;
+            padding: 5px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .post-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .post-header {
-            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
-            font-weight: bold;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
         }
 
-        .category {
-            font-size: 12px;
-            color: #0095f6;
+        .post-time {
+            color: #999;
+            font-size: 13px;
         }
 
         .post-body {
-            padding: 12px 15px;
-        }
-
-        .post-body h4 {
-            margin-bottom: 5px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            flex-grow: 1;
         }
 
         .post-footer {
-            padding: 10px 15px;
-            border-top: 1px solid #efefef;
-            font-size: 14px;
-            color: #555;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+            gap: 15px;
+            font-size: 13px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
         }
 
-        .reply-btn {
-            color: #0095f6;
-            cursor: pointer;
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #667eea;
             text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            padding: 8px 12px;
+        }
+
+        .action-btn:hover {
+            color: #764ba2;
+        }
+
+        .reply-btn-disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .reply-btn-disabled:hover {
+            color: #ccc;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .empty-state h2 {
+            font-size: 22px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .post {
+                grid-template-columns: 120px 1fr;
+            }
+
+            .post-sidebar {
+                padding: 15px 10px;
+            }
+
+            .post-author {
+                font-size: 13px;
+            }
+
+            .post-avatar {
+                font-size: 32px;
+            }
+
+            .post-body {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
         }
     </style>
 </head>
 <body>
+
 <?php include("header.php"); ?>
 
-<div class="feed">
+<div class="container">
+    <h1 class="page-title">📰 All Forum Posts</h1>
+
+    <div class="feed">
 
 <?php
 // Fetch posts with user, category, and number of replies
@@ -195,31 +246,69 @@ function timeAgo($datetime) {
 }
 
 // Loop through posts
-while ($row = mysqli_fetch_assoc($result)) { 
+if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) { 
 ?>
     <div class="post">
-        <!-- Post Header -->
-        <div class="post-header">
-            <span>@<?php echo htmlspecialchars($row['username']); ?></span>
-            <span class="category"><?php echo htmlspecialchars($row['category_name']); ?></span>
+        <!-- POST SIDEBAR -->
+        <div class="post-sidebar">
+            <div class="post-avatar">👤</div>
+            <div class="post-author"><?php echo htmlspecialchars($row['username']); ?></div>
+            <span class="post-category"><?php echo htmlspecialchars($row['category_name']); ?></span>
         </div>
 
-        <!-- Post Body -->
-        <div class="post-body">
-            <p><?php echo nl2br(htmlspecialchars($row['content'])); ?></p>
-        </div>
+        <!-- POST CONTENT -->
+        <div class="post-content">
+            <div class="post-header">
+                <span class="post-time"><?php echo timeAgo($row['created_at']); ?></span>
+                <span>#<?php echo $row['post_id']; ?></span>
+            </div>
+            
+            <div class="post-body">
+                <?php echo nl2br(htmlspecialchars(substr($row['content'], 0, 300))) . (strlen($row['content']) > 300 ? '...' : ''); ?>
+            </div>
 
-        <!-- Post Footer -->
-        <div class="post-footer">
-            <span><?php echo timeAgo($row['created_at']); ?></span>
-            <span>
-                <?php echo $row['total_replies']; ?> replies · 
-                <a class="reply-btn" href="replay.php?post_id=<?php echo $row['post_id']; ?>">Reply</a>
-            </span>
+            <div class="post-footer">
+                <div class="post-actions">
+                    <!-- View Post Button -->
+                    <a class="action-btn" href="replay.php?post_id=<?php echo $row['post_id']; ?>">
+                        💬 <?php echo $row['total_replies']; ?> Replies
+                    </a>
+                    
+                    <!-- Reply Button (Only for logged-in users) -->
+                    <?php if(isLogedIn()): ?>
+                        <a class="action-btn" href="replay.php?post_id=<?php echo $row['post_id']; ?>">
+                            ↩️ Reply
+                        </a>
+                    <?php else: ?>
+                        <a class="action-btn reply-btn-disabled" title="Login required to reply - You must be logged in to participate in discussions" href="login.php?message=Login to reply to posts">
+                            ↩️ Reply (Login Required)
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
+    </div>
+<?php 
+    }
+} else {
+?>
+    <div class="empty-state">
+        <h2>📭 No Posts Yet</h2>
+        <p>Be the first one to start a discussion!</p>
+        <?php if(isLogedIn()): ?>
+            <a href="create_post.php" class="action-btn" style="margin-top: 15px; justify-content: center;">
+                ✏️ Create New Post
+            </a>
+        <?php else: ?>
+            <a href="login.php" class="action-btn" style="margin-top: 15px; justify-content: center;">
+                Login to Create Post
+            </a>
+        <?php endif; ?>
     </div>
 <?php } ?>
 
+    </div>
 </div>
 
 </body>

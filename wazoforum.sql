@@ -104,7 +104,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `username`, `password`, `role`, `created_at`) VALUES
-(1, 'admin@eforum.com', 'aniceth', '123456', 'member', '2026-01-28 08:08:38'),
+(1, 'admin@eforum.com', 'aniceth', '123456', 'admin', '2026-01-28 08:08:38'),
 (3, 'anicethleonce4@gmail.com', 'moz', '123456', 'member', '2026-01-28 08:09:59'),
 (8, 'leonceaniceth@gmail.com', 'qwer', '123456', 'member', '2026-01-28 08:19:29'),
 (16, 'abdul@gmail.com', 'abdul', '123456', 'member', '2026-01-28 09:41:50'),

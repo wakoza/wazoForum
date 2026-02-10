@@ -1,12 +1,12 @@
 <?php
 session_start();
-include("../db_connection.php");
-include("../function.php");
+include("db_connection.php");
+include("function.php");
 
 // Check if user is logged in and is admin
 $user = getCurrentUser();
 if (!isLogedIn() || !$user || $user['role'] !== 'admin') {
-    header("Location: ../login.php?message=Admin access required");
+    header("Location: login.php?message=Admin access required");
     exit;
 }
 
@@ -103,7 +103,7 @@ $admin_count = $admin_row['admin_count'];
         }
 
         .header-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             padding: 30px;
             border-radius: 12px;
@@ -300,7 +300,7 @@ $admin_count = $admin_row['admin_count'];
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             display: flex;
             align-items: center;
@@ -522,30 +522,30 @@ $admin_count = $admin_row['admin_count'];
     </style>
 </head>
 <body>
-    <?php include("../header.php"); ?>
+    <?php include("header.php"); ?>
 
     <div class="container">
-        <a href="../index.php" class="back-link">
+        <a href="index.php" class="back-link">
             <i class="fas fa-arrow-left"></i> Back to Forum
         </a>
 
         <div class="header-section">
             <h1>
-                <i class="fas fa-users-cog"></i> Member Management
+                <i class=""></i> Member Management
             </h1>
             <p>View, search, and manage all forum members</p>
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-card-label">👥 Total Members</div>
+                    <div class="stat-card-label">Total Members</div>
                     <div class="stat-card-number"><?php echo $total_members; ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-label">👨‍💼 Administrators</div>
+                    <div class="stat-card-label">Administrators</div>
                     <div class="stat-card-number"><?php echo $admin_count; ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-label">👤 Regular Members</div>
+                    <div class="stat-card-label">Regular Members</div>
                     <div class="stat-card-number"><?php echo $total_members - $admin_count; ?></div>
                 </div>
             </div>
@@ -574,7 +574,7 @@ $admin_count = $admin_row['admin_count'];
                         <input 
                             type="text" 
                             name="search" 
-                            placeholder="🔍 Search by username or email..." 
+                            placeholder="Search by username or email..." 
                             value="<?php echo htmlspecialchars($search); ?>"
                         >
                         <button type="submit" class="btn btn-search">
@@ -668,7 +668,7 @@ $admin_count = $admin_row['admin_count'];
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">⚠️ Delete Member</div>
+            <div class="modal-header">Delete Member</div>
             <div class="modal-body">
                 <p>Are you sure you want to delete member: <strong id="memberName"></strong>?</p>
                 <p style="margin-top: 10px; color: #f44336; font-weight: 600;">This will also delete all their posts and replies.</p>

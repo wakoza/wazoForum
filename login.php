@@ -23,10 +23,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     if(mysqli_num_rows($results) == 1){
         $row = mysqli_fetch_assoc($results);
         
-    //verifying the password
+    //verify the password
         if($password == $row['password']){
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['username'] = $row['username'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['role'] = $row['role'];
 
             //redirecting to welcome page
             header("location: index.php");

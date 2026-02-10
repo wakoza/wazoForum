@@ -1,7 +1,6 @@
 <?php
-
 include("db_connection.php");
-
+include("function.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,6 +71,7 @@ include("db_connection.php");
         .auth-buttons {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         .btn-login, .btn-register {
@@ -103,6 +103,63 @@ include("db_connection.php");
             transform: scale(1.05);
         }
 
+        /* ===== USER PROFILE SECTION ===== */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+            color: #667eea;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-logout:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-logout:active {
+            transform: translateY(0);
+        }
+
         /* ===== FOOTER ===== */
         footer {
             background: #222;
@@ -110,6 +167,52 @@ include("db_connection.php");
             text-align: center;
             padding: 40px 20px;
             margin-top: 80px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 1.5em;
+            }
+
+            .nav-menu {
+                gap: 15px;
+                font-size: 14px;
+                order: 3;
+                width: 100%;
+            }
+
+            .auth-buttons {
+                gap: 10px;
+                order: 2;
+            }
+
+            .user-profile {
+                gap: 8px;
+                padding: 6px 12px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .user-name {
+                font-size: 13px;
+            }
+
+            .btn-logout,
+            .btn-login,
+            .btn-register {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -125,14 +228,22 @@ include("db_connection.php");
                 <li><a href="posts.php">Posts</a></li>
             </ul>
 
-            <span style="color:white;">
-                <i class="fas fa-user-circle"></i>
-            </span>
-            <a href="logout.php">Logout</a>
-
             <div class="auth-buttons">
-                <a href="login.php" class="btn-login">Login</a>
-                <a href="register.php" class="btn-register">Register</a>
+                <?php if(isLogedIn()): 
+                    $user = getCurrentUser();
+                    $firstLetter = strtoupper(substr($user['username'], 0, 1));
+                ?>
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <?php echo $firstLetter; ?>
+                        </div>
+                        <span class="user-name"><?php echo htmlspecialchars($user['username']); ?></span>
+                    </div>
+                    <a href="logout.php" class="btn-logout">Logout</a>
+                <?php else: ?>
+                    <a href="login.php" class="btn-login">Login</a>
+                    <a href="register.php" class="btn-register">Register</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
