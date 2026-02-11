@@ -571,7 +571,7 @@ function timeAgo($datetime) {
                             <h3><?php echo htmlspecialchars($cat['category_name']); ?></h3>
                             <p><?php echo htmlspecialchars(substr($cat['description'], 0, 100)) . (strlen($cat['description']) > 100 ? '...' : ''); ?></p>
                             <div class="category-card-footer">
-                                <span>📊 <?php echo $cat['post_count']; ?> posts</span>
+                                <span><?php echo $cat['post_count']; ?> posts</span>
                                 <span>→</span>
                             </div>
                         </a>
@@ -588,11 +588,11 @@ function timeAgo($datetime) {
                     <div class="category-actions">
                         <?php if(isLogedIn()): ?>
                             <a href="posts.php" class="btn btn-primary">
-                                ✏️ Create New Post
+                                Create New Post
                             </a>
                         <?php else: ?>
                             <a href="login.php" class="btn btn-primary">
-                                ✏️ Login to Post
+                                Login to Post
                             </a>
                         <?php endif; ?>
                         <a href="categories.php" class="btn btn-secondary">
@@ -609,7 +609,7 @@ function timeAgo($datetime) {
                             <div class="post">
                                 <!-- POST SIDEBAR -->
                                 <div class="post-sidebar">
-                                    <div class="post-avatar">👤</div>
+                                    <div class="post-avatar"></div>
                                     <div class="post-author"><?php echo htmlspecialchars($post['username']); ?></div>
                                     <span class="post-category"><?php echo htmlspecialchars($post['category_name']); ?></span>
                                 </div>
@@ -657,7 +657,7 @@ function timeAgo($datetime) {
                 <?php else: ?>
 
                     <div class="empty-state">
-                        <h2>📭 No Discussions Yet</h2>
+                        <h2>No Discussions Yet</h2>
                         <p>Be the first one to start a discussion in this category.</p>
                         <?php if(isLogedIn()): ?>
                             <a href="create_post.php" class="btn btn-primary">
@@ -710,7 +710,7 @@ function timeAgo($datetime) {
                         html += `
                             <div class="reply-item">
                                 <div class="reply-sidebar">
-                                    <div style="font-size: 20px; margin-bottom: 4px;">👤</div>
+                                    <div style="font-size: 20px; margin-bottom: 4px;"></div>
                                     <div class="reply-author">${reply.username}</div>
                                 </div>
                                 <div class="reply-content">

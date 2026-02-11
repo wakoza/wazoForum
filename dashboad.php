@@ -1,12 +1,12 @@
 <?php
 session_start();
-include("../db_connection.php");
-include("../function.php");
+include("db_connection.php");
+include("function.php");
 
 // Check if user is logged in and is admin
 $user = getCurrentUser();
 if (!isLogedIn() || !$user || $user['role'] !== 'admin') {
-    header("Location: ../login.php?message=Admin access required");
+    header("Location: login.php?message=Admin access required");
     exit;
 }
 
@@ -322,28 +322,31 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
     </style>
 </head>
 <body>
-    <?php include("../header.php"); ?>
+    <?php include("header.php"); ?>
 
     <div class="container">
-        <a href="../index.php" class="back-link">
-            <i class="fas fa-arrow-left"></i> Back to Forum
+        <a href="index.php" class="back-link">
+            Back to Forum
         </a>
 
         <div class="header-section">
             <h1>
-                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                Admin Dashboard
             </h1>
             <p>Welcome back, <?php echo htmlspecialchars($user['username']); ?>! Here's an overview of your forum.</p>
             
             <div class="admin-nav">
-                <a href="manageuser.php" class="nav-btn">
-                    <i class="fas fa-users"></i> Manage Members
+                <a href="admin/manageuser.php" class="nav-btn">
+                    Manage Members
                 </a>
-                <a href="../categories.php" class="nav-btn">
-                    <i class="fas fa-list"></i> View Categories
+                <a href="admin/deleted_members.php" class="nav-btn">
+                    Deleted Members
                 </a>
-                <a href="../posts.php" class="nav-btn">
-                    <i class="fas fa-comments"></i> All Posts
+                <a href="categories.php" class="nav-btn">
+                    View Categories
+                </a>
+                <a href="posts.php" class="nav-btn">
+                    All Posts
                 </a>
             </div>
         </div>
@@ -351,7 +354,6 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon stat-icon-members">
-                    <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-content">
                     <h3>Total Members</h3>
@@ -361,7 +363,6 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
 
             <div class="stat-card">
                 <div class="stat-icon stat-icon-posts">
-                    <i class="fas fa-pen"></i>
                 </div>
                 <div class="stat-content">
                     <h3>Total Posts</h3>
@@ -371,7 +372,6 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
 
             <div class="stat-card">
                 <div class="stat-icon stat-icon-replies">
-                    <i class="fas fa-reply"></i>
                 </div>
                 <div class="stat-content">
                     <h3>Total Replies</h3>
@@ -381,7 +381,6 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
 
             <div class="stat-card">
                 <div class="stat-icon stat-icon-categories">
-                    <i class="fas fa-folder"></i>
                 </div>
                 <div class="stat-content">
                     <h3>Categories</h3>
@@ -395,7 +394,7 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
             <div class="card">
                 <div class="card-header">
                     <h2>
-                        <i class="fas fa-user-plus"></i> Recent Members
+                        Recent Members
                     </h2>
                 </div>
                 <div class="card-body">
@@ -429,7 +428,7 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
             <div class="card">
                 <div class="card-header">
                     <h2>
-                        <i class="fas fa-fire"></i> Recent Posts
+                        Recent Posts
                     </h2>
                 </div>
                 <div class="card-body">
@@ -456,7 +455,7 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
                         </div>
                     <?php endif; ?>
 
-                    <a href="../posts.php" class="view-all-link">View All Posts</a>
+                    <a href="posts.php" class="view-all-link">View All Posts</a>
                 </div>
             </div>
 
@@ -464,7 +463,7 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
             <div class="card">
                 <div class="card-header">
                     <h2>
-                        <i class="fas fa-chart-pie"></i> Forum Health
+                        Forum Health
                     </h2>
                 </div>
                 <div class="card-body">
@@ -500,13 +499,13 @@ $recent_posts = mysqli_query($conn, $recent_posts_sql);
                             <?php 
                             $engagement = $total_members > 0 ? ($total_posts / $total_members) : 0;
                             if ($engagement > 2) {
-                                echo '✓ Excellent';
+                                echo 'Excellent';
                             } elseif ($engagement > 1) {
-                                echo '✓ Good';
+                                echo 'Good';
                             } elseif ($engagement > 0.5) {
-                                echo '⚠ Fair';
+                                echo 'Fair';
                             } else {
-                                echo '✗ Low';
+                                echo 'Low';
                             }
                             ?>
                         </div>

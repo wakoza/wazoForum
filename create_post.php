@@ -248,21 +248,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div class="container">
         <div class="header">
-            <h1>✏️ Create New Post</h1>
+            <h1>Create New Post</h1>
             <p>Share your thoughts with the community</p>
         </div>
 
         <div class="form-container">
             <?php if ($success_msg): ?>
                 <div class="alert alert-success">
-                    <span class="alert-icon">✓</span>
+                    <span class="alert-icon"></span>
                     <span><?php echo htmlspecialchars($success_msg); ?> Redirecting...</span>
                 </div>
             <?php endif; ?>
 
             <?php if ($error_msg): ?>
                 <div class="alert alert-error">
-                    <span class="alert-icon">✕</span>
+                    <span class="alert-icon"></span>
                     <span><?php echo htmlspecialchars($error_msg); ?></span>
                 </div>
             <?php endif; ?>

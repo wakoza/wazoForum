@@ -199,21 +199,21 @@ $is_admin = isLogedIn() && $user && $user['role'] === 'admin';
     <?php include("header.php"); ?>
 
     <div class="container">
-        <h1>🔍 Account Status Check</h1>
+        <h1>Account Status Check</h1>
 
         <?php if (isLogedIn()): ?>
             <?php if ($is_admin): ?>
                 <div class="alert alert-success">
-                    <strong>✓ Admin Verified!</strong> You have admin privileges. You should see the purple "Admin Panel" button in your header.
+                    <strong>Admin Verified!</strong> You have admin privileges. You should see the purple "Admin Panel" button in your header.
                 </div>
             <?php else: ?>
                 <div class="alert alert-warning">
-                    <strong>⚠ Not an Admin</strong> Your account is registered as a regular member. Only admins can access the admin panel.
+                    <strong>Not an Admin</strong> Your account is registered as a regular member. Only admins can access the admin panel.
                 </div>
             <?php endif; ?>
 
             <div class="section">
-                <h2>👤 Your Account Details</h2>
+                <h2>Your Account Details</h2>
                 <div class="info-item">
                     <span class="label">User ID:</span>
                     <span class="value"><?php echo htmlspecialchars($user['user_id'] ?? 'N/A'); ?></span>
@@ -237,32 +237,32 @@ $is_admin = isLogedIn() && $user && $user['role'] === 'admin';
                 <div class="info-item">
                     <span class="label">Login Status:</span>
                     <span class="value">
-                        <span class="status status-admin">✓ LOGGED IN</span>
+                        <span class="status status-admin">LOGGED IN</span>
                     </span>
                 </div>
             </div>
 
             <div class="section">
-                <h2>✅ System Status</h2>
+                <h2>System Status</h2>
                 <div class="info-item">
                     <span class="label">IsLogedIn() Function:</span>
                     <span class="value">
-                        <span class="checkmark">✓</span> Working
+                        <span class="checkmark"></span> Working
                     </span>
                 </div>
                 <div class="info-item">
                     <span class="label">GetCurrentUser() Function:</span>
                     <span class="value">
-                        <span class="checkmark">✓</span> Working
+                        <span class="checkmark"></span> Working
                     </span>
                 </div>
                 <div class="info-item">
                     <span class="label">Session Role Stored:</span>
                     <span class="value">
                         <?php if (isset($_SESSION['role'])): ?>
-                            <span class="checkmark">✓</span> Yes (<?php echo htmlspecialchars($_SESSION['role']); ?>)
+                            <span class="checkmark"></span> Yes (<?php echo htmlspecialchars($_SESSION['role']); ?>)
                         <?php else: ?>
-                            <span class="cross">✗</span> No
+                            <span class="cross"></span> No
                         <?php endif; ?>
                     </span>
                 </div>
@@ -270,27 +270,27 @@ $is_admin = isLogedIn() && $user && $user['role'] === 'admin';
                     <span class="label">Admin Check:</span>
                     <span class="value">
                         <?php if ($is_admin): ?>
-                            <span class="checkmark">✓</span> You are admin
+                            <span class="checkmark"></span> You are admin
                         <?php else: ?>
-                            <span class="cross">✗</span> Not admin
+                            <span class="cross"></span> Not admin
                         <?php endif; ?>
                     </span>
                 </div>
             </div>
 
             <div class="section">
-                <h2>🎯 Next Steps</h2>
+                <h2>Next Steps</h2>
                 <?php if ($is_admin): ?>
                     <p style="margin-bottom: 15px;">Welcome, Administrator! You now have access to:</p>
                     <ul style="margin-left: 20px; margin-bottom: 15px;">
-                        <li>📊 Admin Dashboard</li>
-                        <li>👥 Member Management (search, view, delete)</li>
-                        <li>📊 Forum Statistics</li>
-                        <li>📊 Activity Monitoring</li>
+                        <li>Admin Dashboard</li>
+                        <li>Member Management (search, view, delete)</li>
+                        <li>Forum Statistics</li>
+                        <li>Activity Monitoring</li>
                     </ul>
                     <div class="btn-group">
-                        <a href="admin/dashboad.php" class="btn btn-primary">🚀 Go to Admin Dashboard</a>
-                        <a href="admin/manageuser.php" class="btn btn-primary">👥 Manage Members</a>
+                        <a href="admin/dashboad.php" class="btn btn-primary">Go to Admin Dashboard</a>
+                        <a href="admin/manageuser.php" class="btn btn-primary">Manage Members</a>
                         <a href="index.php" class="btn btn-secondary">← Back to Forum</a>
                     </div>
                 <?php else: ?>
@@ -303,7 +303,7 @@ $is_admin = isLogedIn() && $user && $user['role'] === 'admin';
             </div>
 
             <div class="section" style="background: #f0f2f5; border-left-color: #999;">
-                <h2>🔧 Session Debug Info</h2>
+                <h2>Session Debug Info</h2>
                 <div class="code-block">
 $_SESSION contents:<br>
 <?php 
@@ -316,11 +316,11 @@ $_SESSION contents:<br>
 
         <?php else: ?>
             <div class="alert alert-warning">
-                <strong>⚠ Not Logged In</strong> Please log in to access your account details.
+                <strong>Not Logged In</strong> Please log in to access your account details.
             </div>
 
             <div class="section">
-                <h2>🔐 Please Log In</h2>
+                <h2>Please Log In</h2>
                 <p style="margin-bottom: 20px;">You need to be logged in to view this page.</p>
                 <div class="btn-group">
                     <a href="login.php" class="btn btn-primary">Login</a>
