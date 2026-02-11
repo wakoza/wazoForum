@@ -24,9 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_user_id'])) {
     if ($delete_id === (int)$admin_user_id) {
         $delete_error = "You cannot delete your own account!";
     } else {
+        // Get user data before deletion
+        $get_user = "SELECT * FROM users WHERE user_id = $delete_id";
+        $user_result = mysqli_query($conn, $get_user);
+        $user_to_delete = mysqli_fetch_assoc($user_result);
+        
         // Delete user and their posts/replies
         $conn->begin_transaction();
         try {
+            // Log the deletion to deleted_members table
+            $username_escaped = mysqli_real_escape_string($conn, $user_to_delete['username']);
+            $email_escaped = mysqli_real_escape_string($conn, $user_to_delete['email']);
+            $created_at = mysqli_real_escape_string($conn, $user_to_delete['created_at']);
+            $role = mysqli_real_escape_string($conn, $user_to_delete['role']);
+            
+            $log_delete = "INSERT INTO deleted_members (user_id, email, username, role, created_at, deleted_by) 
+                          VALUES ($delete_id, '$email_escaped', '$username_escaped', '$role', '$created_at', $admin_user_id)";
+            mysqli_query($conn, $log_delete);
+            
             // Delete replies from this user
             $del_replies = "DELETE FROM replies WHERE user_id = $delete_id";
             mysqli_query($conn, $del_replies);
@@ -39,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_user_id'])) {
             $del_user = "DELETE FROM users WHERE user_id = $delete_id";
             if (mysqli_query($conn, $del_user)) {
                 $conn->commit();
-                $deleted_msg = "✓ Member deleted successfully!";
+                $deleted_msg = "Member deleted successfully and logged in deletion history!";
             }
         } catch (Exception $e) {
             $conn->rollback();
@@ -405,6 +420,32 @@ $admin_count = $admin_row['admin_count'];
             transform: translateX(-4px);
         }
 
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -525,27 +566,35 @@ $admin_count = $admin_row['admin_count'];
     <?php include("../header.php"); ?>
 
     <div class="container">
-        <a href="../index.php" class="back-link">
-            <i class="fas fa-arrow-left"></i> Back to Forum
-        </a>
+        <div class="nav-links">
+            <a href="../dashboad.php" class="nav-link">
+                Dashboard
+            </a>
+            <a href="deleted_members.php" class="nav-link">
+                Deleted Members
+            </a>
+            <a href="../index.php" class="nav-link">
+                Back to Forum
+            </a>
+        </div>
 
         <div class="header-section">
             <h1>
-                <i class="fas fa-users-cog"></i> Member Management
+                Member Management
             </h1>
             <p>View, search, and manage all forum members</p>
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-card-label">👥 Total Members</div>
+                    <div class="stat-card-label">Total Members</div>
                     <div class="stat-card-number"><?php echo $total_members; ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-label">👨‍💼 Administrators</div>
+                    <div class="stat-card-label">Administrators</div>
                     <div class="stat-card-number"><?php echo $admin_count; ?></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-label">👤 Regular Members</div>
+                    <div class="stat-card-label">Regular Members</div>
                     <div class="stat-card-number"><?php echo $total_members - $admin_count; ?></div>
                 </div>
             </div>
@@ -554,14 +603,12 @@ $admin_count = $admin_row['admin_count'];
         <div class="alerts">
             <?php if ($deleted_msg): ?>
                 <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
                     <span><?php echo $deleted_msg; ?></span>
                 </div>
             <?php endif; ?>
 
             <?php if ($delete_error): ?>
                 <div class="alert alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
                     <span><?php echo $delete_error; ?></span>
                 </div>
             <?php endif; ?>
@@ -574,17 +621,17 @@ $admin_count = $admin_row['admin_count'];
                         <input 
                             type="text" 
                             name="search" 
-                            placeholder="🔍 Search by username or email..." 
+                            placeholder="Search by username or email..." 
                             value="<?php echo htmlspecialchars($search); ?>"
                         >
                         <button type="submit" class="btn btn-search">
-                            <i class="fas fa-search"></i> Search
+                            Search
                         </button>
                     </div>
                 </form>
                 <?php if (!empty($search)): ?>
                     <a href="manageuser.php" class="btn btn-reset">
-                        <i class="fas fa-times"></i> Clear
+                        Clear
                     </a>
                 <?php endif; ?>
             </div>
@@ -639,7 +686,7 @@ $admin_count = $admin_row['admin_count'];
                                         <button 
                                             class="action-btn btn-delete"
                                             onclick="confirmDelete(<?php echo $member['user_id']; ?>, '<?php echo htmlspecialchars($member['username']); ?>')">
-                                            <i class="fas fa-trash"></i> Delete
+                                            Delete
                                         </button>
                                     <?php else: ?>
                                         <span style="color: #999; font-size: 12px;">Your Account</span>
@@ -651,7 +698,7 @@ $admin_count = $admin_row['admin_count'];
                 </table>
             <?php else: ?>
                 <div class="empty-state">
-                    <div class="empty-state-icon">🔍</div>
+                    <div class="empty-state-icon"></div>
                     <h3>No members found</h3>
                     <p>
                         <?php if (!empty($search)): ?>
@@ -668,7 +715,7 @@ $admin_count = $admin_row['admin_count'];
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">⚠️ Delete Member</div>
+            <div class="modal-header">Delete Member</div>
             <div class="modal-body">
                 <p>Are you sure you want to delete member: <strong id="memberName"></strong>?</p>
                 <p style="margin-top: 10px; color: #f44336; font-weight: 600;">This will also delete all their posts and replies.</p>

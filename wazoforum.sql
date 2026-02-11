@@ -102,14 +102,22 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
+---------------------------------
 
-INSERT INTO `users` (`user_id`, `email`, `username`, `password`, `role`, `created_at`) VALUES
-(1, 'admin@eforum.com', 'aniceth', '123456', 'admin', '2026-01-28 08:08:38'),
-(3, 'anicethleonce4@gmail.com', 'moz', '123456', 'member', '2026-01-28 08:09:59'),
-(8, 'leonceaniceth@gmail.com', 'qwer', '123456', 'member', '2026-01-28 08:19:29'),
-(16, 'abdul@gmail.com', 'abdul', '123456', 'member', '2026-01-28 09:41:50'),
-(17, 'ana@gmail.com', 'Annastazia', '12345', 'member', '2026-01-28 09:46:49'),
-(18, 'Salimahamis590@gmail.com', 'S3545/0099/2019', '098765', 'member', '2026-01-28 17:00:18');
+--
+-- Table structure for table `deleted_members`
+--
+
+CREATE TABLE `deleted_members` (
+  `deleted_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `role` enum('admin','member') NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -155,6 +163,14 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `username` (`username`);
 
 --
+-- Indexes for table `deleted_members`
+--
+ALTER TABLE `deleted_members`
+  ADD PRIMARY KEY (`deleted_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `deleted_by` (`deleted_by`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -181,6 +197,12 @@ ALTER TABLE `posts`
 --
 ALTER TABLE `replies`
   MODIFY `reply_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `deleted_members`
+--
+ALTER TABLE `deleted_members`
+  MODIFY `deleted_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -212,6 +234,12 @@ ALTER TABLE `posts`
 ALTER TABLE `replies`
   ADD CONSTRAINT `fk_replies_post` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_replies_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `deleted_members`
+--
+ALTER TABLE `deleted_members`
+  ADD CONSTRAINT `fk_deleted_admin` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

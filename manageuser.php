@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_user_id'])) {
             $del_user = "DELETE FROM users WHERE user_id = $delete_id";
             if (mysqli_query($conn, $del_user)) {
                 $conn->commit();
-                $deleted_msg = "✓ Member deleted successfully!";
+                $deleted_msg = "Member deleted successfully!";
             }
         } catch (Exception $e) {
             $conn->rollback();
@@ -651,7 +651,7 @@ $admin_count = $admin_row['admin_count'];
                 </table>
             <?php else: ?>
                 <div class="empty-state">
-                    <div class="empty-state-icon">🔍</div>
+                    <div class="empty-state-icon"></div>
                     <h3>No members found</h3>
                     <p>
                         <?php if (!empty($search)): ?>

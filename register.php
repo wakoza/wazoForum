@@ -14,15 +14,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     //validation
     if(strlen($username) < 4){
-       $redmassage = "username must have atleast 4 characters";
-    }elseif(strlen($username) > 20){
+       $redmassage = "username must have atleast 6 characters";
+    }elseif(!strlen($username) > 20){
         $redmassage = "username must have atmost 20 characters";
-    }elseif(filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $redmassage = "invalid email";
-    }elseif($confirm_password == $password){
+    }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $redmassage = "Invalid email";
+    }elseif($confirm_password !== $password){
        $redmassage = "password does not match";
-    }elseif(strlen($password) < 6 && strlen($password) < 9){
-        $redmassage = "password must be > 6 and < 9";
+    }elseif(strlen($password) < 6){  // Check if LESS than 6
+    $redmassage = "password must be atleast 6 characters";
     }else{
     //check if a user aleady exist
     $checkuser = "SELECT * FROM users WHERE email = '$email'";

@@ -442,7 +442,7 @@ if ($replies_result) {
         <!-- ORIGINAL POST -->
         <div class="original-post">
             <div class="original-post-sidebar">
-                <div class="post-user-avatar">👤</div>
+                <div class="post-user-avatar"></div>
                 <div class="post-user-name"><?php echo htmlspecialchars($post['username']); ?></div>
                 <span class="post-category-badge"><?php echo htmlspecialchars($post['category_name']); ?></span>
             </div>
@@ -464,7 +464,7 @@ if ($replies_result) {
             <?php foreach ($replies as $index => $reply): ?>
                 <div class="reply-item">
                     <div class="reply-sidebar">
-                        <div class="reply-avatar">👤</div>
+                        <div class="reply-avatar"></div>
                         <div class="reply-author"><?php echo htmlspecialchars($reply['username']); ?></div>
                     </div>
                     <div class="reply-content">

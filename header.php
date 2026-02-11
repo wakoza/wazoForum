@@ -103,6 +103,28 @@ include("function.php");
             transform: scale(1.05);
         }
 
+        .btn-admin-panel {
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            border: 2px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-admin-panel:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #dd4e42 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
         /* ===== USER PROFILE SECTION ===== */
         .user-profile {
             display: flex;
@@ -213,6 +235,11 @@ include("function.php");
                 padding: 8px 16px;
                 font-size: 12px;
             }
+
+            .btn-admin-panel {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -221,7 +248,7 @@ include("function.php");
     <header>
 
         <div class="header-container">
-            <a href="index.php" class="logo">wazaForum</a>
+            <a href="index.php" class="logo">wazoForum</a>
             <ul class="nav-menu">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="categories.php">Categories</a></li>
@@ -233,6 +260,11 @@ include("function.php");
                     $user = getCurrentUser();
                     $firstLetter = strtoupper(substr($user['username'], 0, 1));
                 ?>
+                    <?php if($user['role'] === 'admin'): ?>
+                        <a href="dashboad.php" class="btn-admin-panel">
+                            Admin Panel
+                        </a>
+                    <?php endif; ?>
                     <div class="user-profile">
                         <div class="user-avatar">
                             <?php echo $firstLetter; ?>
@@ -247,3 +279,12 @@ include("function.php");
             </div>
         </div>
     </header>
+
+    <!-- Salutation for logged-in users -->
+    <?php if(isLogedIn()): 
+        $user = getCurrentUser();
+    ?>
+    <div data-username="<?php echo htmlspecialchars($user['username']); ?>"></div>
+    <script src="js/salutation.js"></script>
+    <?php endif; ?>
+

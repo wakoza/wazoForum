@@ -211,7 +211,14 @@ include("function.php");
 <?php include("header.php"); ?>
 
 <div class="container">
-    <h1 class="page-title">📰 All Forum Posts</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 class="page-title">📰 All Forum Posts</h1>
+        <?php if(isLogedIn()): ?>
+            <a href="create_post.php" class="action-btn" style="background: #667eea; color: white; padding: 12px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                Create New Post
+            </a>
+        <?php endif; ?>
+    </div>
 
     <div class="feed">
 
@@ -252,7 +259,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     <div class="post">
         <!-- POST SIDEBAR -->
         <div class="post-sidebar">
-            <div class="post-avatar">👤</div>
+            <div class="post-avatar"></div>
             <div class="post-author"><?php echo htmlspecialchars($row['username']); ?></div>
             <span class="post-category"><?php echo htmlspecialchars($row['category_name']); ?></span>
         </div>
@@ -294,11 +301,11 @@ if ($result && mysqli_num_rows($result) > 0) {
 } else {
 ?>
     <div class="empty-state">
-        <h2>📭 No Posts Yet</h2>
+        <h2>No Posts Yet</h2>
         <p>Be the first one to start a discussion!</p>
         <?php if(isLogedIn()): ?>
             <a href="create_post.php" class="action-btn" style="margin-top: 15px; justify-content: center;">
-                ✏️ Create New Post
+                Create New Post
             </a>
         <?php else: ?>
             <a href="login.php" class="action-btn" style="margin-top: 15px; justify-content: center;">

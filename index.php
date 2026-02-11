@@ -8,7 +8,7 @@ include("function.php");
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>E-Forum | Community Platform</title>
+    <title>wazoForum | Community Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -491,7 +491,7 @@ include("function.php");
                 <div class="trending-post">
                     <!-- POST SIDEBAR -->
                     <div class="trending-post-sidebar">
-                        <div class="trending-post-avatar">👤</div>
+                        <div class="trending-post-avatar"></div>
                         <div class="trending-post-author"><?php echo htmlspecialchars($post['username']); ?></div>
                         <span class="trending-post-category"><?php echo htmlspecialchars($post['category_name']); ?></span>
                     </div>
@@ -529,7 +529,9 @@ include("function.php");
             <?php } ?>
             </div>
 
-            <a href="login.php" class="view-all-btn">Create a post</a>
+            <?php if(!isLogedIn()): ?>
+                <a href="login.php" class="view-all-btn">Create a post</a>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -540,7 +542,9 @@ include("function.php");
                 <h2>We've been building <span>community</span><br>for <span>many years.</span></h2>
                 <p>Our platform has been trusted by thousands of users to find answers, share expertise, and build meaningful connections. We're committed to providing a safe, welcoming space for everyone.</p>
                 <p>Join our growing community and discover why millions of people choose to engage with us every day. Your voice matters and your contributions help others.</p>
-                <a href="#" class="company-btn">Create a post</a>
+                <?php if(!isLogedIn()): ?>
+                    <a href="login.php" class="company-btn">Create a post</a>
+                <?php endif; ?>
             </div>
             <div class="company-images">
                 <img src="pictures/background.jpeg" alt="Community Discussion">
