@@ -2,6 +2,44 @@
 session_start();
 include("db_connection.php");
 include("function.php");
+
+// Handle post deletion
+$delete_success = '';
+$delete_error = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete_post') {
+    if (!isLogedIn()) {
+        $delete_error = "You must be logged in to delete a post";
+    } else {
+        $user = getCurrentUser();
+        $post_id = (int)$_POST['post_id'];
+        
+        // Verify the user owns this post
+        $verify_sql = "SELECT user_id FROM posts WHERE post_id = $post_id";
+        $verify_result = mysqli_query($conn, $verify_sql);
+        
+        if (!$verify_result || mysqli_num_rows($verify_result) == 0) {
+            $delete_error = "Post not found";
+        } else {
+            $post_owner = mysqli_fetch_assoc($verify_result);
+            if ($post_owner['user_id'] != $user['user_id']) {
+                $delete_error = "You can only delete your own posts";
+            } else {
+                // Delete replies first (foreign key constraint)
+                $del_replies = "DELETE FROM replies WHERE post_id = $post_id";
+                mysqli_query($conn, $del_replies);
+                
+                // Then delete the post
+                $del_post = "DELETE FROM posts WHERE post_id = $post_id";
+                if (mysqli_query($conn, $del_post)) {
+                    $delete_success = "Post deleted successfully";
+                } else {
+                    $delete_error = "Error deleting post: " . mysqli_error($conn);
+                }
+            }
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -212,13 +250,25 @@ include("function.php");
 
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <h1 class="page-title">📰 All Forum Posts</h1>
+        <h1 class="page-title">All Forum Posts</h1>
         <?php if(isLogedIn()): ?>
             <a href="create_post.php" class="action-btn" style="background: #667eea; color: white; padding: 12px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;">
                 Create New Post
             </a>
         <?php endif; ?>
     </div>
+
+    <?php if ($delete_success): ?>
+        <div style="padding: 15px 20px; border-radius: 6px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; margin-bottom: 20px; font-weight: 500;">
+            <?php echo htmlspecialchars($delete_success); ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($delete_error): ?>
+        <div style="padding: 15px 20px; border-radius: 6px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; margin-bottom: 20px; font-weight: 500;">
+            <?php echo htmlspecialchars($delete_error); ?>
+        </div>
+    <?php endif; ?>
 
     <div class="feed">
 
@@ -227,6 +277,7 @@ include("function.php");
 $sql = "
     SELECT 
         p.post_id,
+        p.user_id,
         p.content,
         p.created_at,
         u.username,
@@ -279,18 +330,29 @@ if ($result && mysqli_num_rows($result) > 0) {
                 <div class="post-actions">
                     <!-- View Post Button -->
                     <a class="action-btn" href="replay.php?post_id=<?php echo $row['post_id']; ?>">
-                        💬 <?php echo $row['total_replies']; ?> Replies
+                        Replies: <?php echo $row['total_replies']; ?>
                     </a>
                     
                     <!-- Reply Button (Only for logged-in users) -->
                     <?php if(isLogedIn()): ?>
                         <a class="action-btn" href="replay.php?post_id=<?php echo $row['post_id']; ?>">
-                            ↩️ Reply
+                            Reply
                         </a>
                     <?php else: ?>
                         <a class="action-btn reply-btn-disabled" title="Login required to reply - You must be logged in to participate in discussions" href="login.php?message=Login to reply to posts">
-                            ↩️ Reply (Login Required)
+                            Reply (Login Required)
                         </a>
+                    <?php endif; ?>
+                    
+                    <!-- Delete Button (Only for post owner) -->
+                    <?php if(isLogedIn() && $user['user_id'] == $row['user_id']): ?>
+                        <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post? All replies will also be deleted.');">
+                            <input type="hidden" name="action" value="delete_post">
+                            <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
+                            <button type="submit" class="action-btn" style="background: none; color: #dc3545; cursor: pointer; border: none; padding: 8px 12px; font-weight: 600;">
+                                Delete
+                            </button>
+                        </form>
                     <?php endif; ?>
                 </div>
             </div>

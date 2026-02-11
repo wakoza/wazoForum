@@ -134,10 +134,13 @@ include("function.php");
             background: rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .user-profile:hover {
             background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .user-avatar {
@@ -156,6 +159,10 @@ include("function.php");
             color: white;
             font-weight: 500;
             font-size: 14px;
+        }
+
+        .user-profile .user-name {
+            color: white;
         }
 
         .btn-logout {
@@ -265,12 +272,12 @@ include("function.php");
                             Admin Panel
                         </a>
                     <?php endif; ?>
-                    <div class="user-profile">
+                    <a href="profile.php" class="user-profile">
                         <div class="user-avatar">
                             <?php echo $firstLetter; ?>
                         </div>
                         <span class="user-name"><?php echo htmlspecialchars($user['username']); ?></span>
-                    </div>
+                    </a>
                     <a href="logout.php" class="btn-logout">Logout</a>
                 <?php else: ?>
                     <a href="login.php" class="btn-login">Login</a>

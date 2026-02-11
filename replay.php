@@ -9,6 +9,42 @@ if (!isLogedIn()) {
     exit;
 }
 
+// Handle post deletion
+$delete_success = '';
+$delete_error = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete_post') {
+    $user = getCurrentUser();
+    $post_id = (int)$_POST['post_id'];
+    
+    // Verify the user owns this post
+    $verify_sql = "SELECT user_id FROM posts WHERE post_id = $post_id";
+    $verify_result = mysqli_query($conn, $verify_sql);
+    
+    if (!$verify_result || mysqli_num_rows($verify_result) == 0) {
+        $delete_error = "Post not found";
+    } else {
+        $post_owner = mysqli_fetch_assoc($verify_result);
+        if ($post_owner['user_id'] != $user['user_id']) {
+            $delete_error = "You can only delete your own posts";
+        } else {
+            // Delete replies first (foreign key constraint)
+            $del_replies = "DELETE FROM replies WHERE post_id = $post_id";
+            mysqli_query($conn, $del_replies);
+            
+            // Then delete the post
+            $del_post = "DELETE FROM posts WHERE post_id = $post_id";
+            if (mysqli_query($conn, $del_post)) {
+                // Redirect to posts page after successful deletion
+                header("Location: posts.php?message=Post deleted successfully");
+                exit;
+            } else {
+                $delete_error = "Error deleting post: " . mysqli_error($conn);
+            }
+        }
+    }
+}
+
 // Get post_id from URL
 $post_id = isset($_GET['post_id']) ? (int)$_GET['post_id'] : 0;
 
@@ -22,6 +58,7 @@ $post_sql = "
         p.post_id,
         p.content,
         p.created_at,
+        p.user_id,
         u.username,
         c.category_name
     FROM posts p
@@ -436,8 +473,14 @@ if ($replies_result) {
     <div class="container">
 
         <a href="categories.php?id=<?php echo htmlspecialchars($_GET['category_id'] ?? ''); ?>" class="back-btn">
-            ← Back to Category
+            Back to Category
         </a>
+
+        <?php if ($delete_error): ?>
+            <div class="error-msg">
+                <?php echo htmlspecialchars($delete_error); ?>
+            </div>
+        <?php endif; ?>
 
         <!-- ORIGINAL POST -->
         <div class="original-post">
@@ -454,13 +497,26 @@ if ($replies_result) {
                 <div class="original-post-body">
                     <?php echo nl2br(htmlspecialchars($post['content'])); ?>
                 </div>
+                
+                <!-- Delete button for post owner -->
+                <?php if($user['user_id'] == $post['user_id']): ?>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; text-align: right;">
+                    <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post? All replies will also be deleted.');">
+                        <input type="hidden" name="action" value="delete_post">
+                        <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
+                        <button type="submit" style="padding: 8px 16px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease;">
+                            Delete Post
+                        </button>
+                    </form>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- REPLIES LIST -->
         <?php if (count($replies) > 0): ?>
         <div class="replies-section">
-            <h2>💬 <?php echo count($replies); ?> Replies</h2>
+            <h2><?php echo count($replies); ?> Replies</h2>
             <?php foreach ($replies as $index => $reply): ?>
                 <div class="reply-item">
                     <div class="reply-sidebar">
@@ -478,7 +534,7 @@ if ($replies_result) {
         </div>
         <?php else: ?>
         <div class="replies-section">
-            <h2>💬 Replies</h2>
+            <h2>Replies</h2>
             <div class="no-replies">
                 <p>No replies yet. Be the first to reply!</p>
             </div>
