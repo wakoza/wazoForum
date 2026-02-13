@@ -1,11 +1,19 @@
 <?php
 
-// Create connection
-$conn = new mysqli("localhost", "root", "","wazoforum");
+$databaseUrl = getenv("MYSQL_URL");
 
-// Check connection
-if(!$conn){
-    die("Connection failed: " . mysqli_connect_error());
+$dbParts = parse_url($databaseUrl);
+
+$host = $dbParts['host'];
+$user = $dbParts['user'];
+$pass = $dbParts['pass'];
+$db   = ltrim($dbParts['path'], '/');
+$port = $dbParts['port'];
+
+$conn = new mysqli($host, $user, $pass, $db, $port);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
 ?>
